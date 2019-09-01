@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--引入bootstrap文件-->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!--引入Echarts文件-->
+    <script src="js/echarts.min.js"></script>
+    <!--引入font-awesome-->
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <!--引入侧边导航栏-->
+    <link href="css/htmleaf-demo.css" rel="stylesheet">
+    <link href="css/nav.css" rel="stylesheet">
+    <link href="fonts/iconfont.css", rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/nav.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!--右边编辑页面-->
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+    <link href="css/notiflix-1.3.0.min.css" rel="stylesheet">
+    <script type="text/javascript" src="js/notiflix-1.3.0.min.js"></script>
+
+    <link href="css/jquery.json-viewer.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery.json-viewer.js"></script>
+
+    <title>设备列表</title>
+
+    <style>
+        div.card{
+            background-color: white;
+            width: 90%;
+            height: 90%;
+            margin: 30px;
+            margin-left: 55px;
+            float: left;
+            border-radius: 15px;
+            box-shadow: 5px 5px 5px 3px rgba(0, 0, 0, 0.2);
+        }
+        #left{
+            width: 35%;
+            height: 100%;
+            float: left;
+        }
+        #right{
+            width: 60%;
+            height: 95%;
+            float: left;
+            padding: 15px;
+            padding-left: 60px;
+            margin-left: 20px;
+        }
+        #denglu{
+            margin: 15px;
+            margin-left: 40px;
+            margin-bottom: 0px;
+            width: 100%;
+            height: 60%;
+            color: black;
+            float: left;
+        }
+        #rizhi2{
+            margin: 5px;
+            margin-top: -5px;
+            margin-left: 55px;
+            width: 100%;
+            height: auto;
+            color: black;
+        }
+        #set{
+            float: left;
+        }
+
+        /*分隔符*/
+
+        [ripple] {
+            z-index: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        [ripple] .ripple {
+            position: absolute;
+            background: #FFFFFF;
+            width: 12px;
+            height: 12px;
+            border-radius: 100%;
+            -webkit-animation: ripple 1.6s;
+            animation: ripple 1.6s;
+        }
+
+        @-webkit-keyframes ripple {
+            0% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                opacity: 0.2;
+            }
+            100% {
+                -webkit-transform: scale(40);
+                transform: scale(40);
+                opacity: 0;
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                opacity: 0.2;
+            }
+            100% {
+                -webkit-transform: scale(40);
+                transform: scale(40);
+                opacity: 0;
+            }
+        }
+    </style>
+
+
+</head>
+<body>
+
+<div id="placehold" style="width: 200px;height: 100%;float: left"></div>
+
+<div id="main" style="width: 1100px;height: 100%; float: left;margin-left: 20px;">
+    <div class="card">
+        <div id="left">
+            <div id="denglu">
+                <div id="left-head" style="width: 100%;height: auto;float: left;margin-bottom: 10px">
+                    <img id="set" src="images/set.png" alt="">
+                    <h3 style="float: left;">设备配置</h3>
+                </div>
+                <div id="left-body" style="width: 100%;height: auto;float: left;margin: 10px;">
+                    <span class="fa fa-user-o fa-5x" style="margin-left: 38%;margin-top: 10px;color: #4285F4"></span>
+                    <form>
+                        <div class="form-group">
+                            <label>IP address</label>
+                            <input type="email" class="form-control"  placeholder="192.168.0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" class="form-control" placeholder="root">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control"  placeholder="Password">
+
+                        </div>
+                        <input id="btn-denglu" type="button" style="margin-left: 40%;outline: none"  class="btn btn-primary" value="登录">
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="right">
+            <div class="tabs">
+                <div class="tabs-header">
+                    <div class="border"></div>
+                    <ul>
+                        <li class="active"><a href="#tab-1" tab-id="1" ripple="ripple" ripple-color="#FFF">Form</a></li>
+                        <li><a href="#tab-2" tab-id="2" ripple="ripple" ripple-color="#FFF">CLI</a></li>
+
+                    </ul>
+                </div>
+                <div class="tabs-content">
+                    <div tab-id="1" class="tab active">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label for="input-hostname" class="col-sm-2 control-label">主机名</label>
+                                <div class="col-sm-8">
+                                    <input type="email" class="form-control" id="input-hostname" placeholder="hostname">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">接口</label>
+                                <div class="col-sm-8">
+                                    <select id="input-interface" class="form-control ">
+                                        <option value="interface m0">interface m0</option>
+                                        <option value="interface e1/1">interface e1/1</option>
+                                        <option value="interface e1/2">interface e1/2</option>
+                                        <option value="interface e1/3">interface e1/3</option>
+                                        <option value="interface e1/4">interface e1/4</option>
+                                        <option value="interface e1/5">interface e1/5</option>
+                                        <option value="interface e1/6">interface e1/6</option>
+                                        <option value="interface e1/7">interface e1/7</option>
+                                        <option value="interface e1/8">interface e1/8</option>
+                                        <option value="interface e1/9">interface e1/9</option>
+                                        <option value="interface e1/10">interface e1/10</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">状态</label>
+                                <div class="col-sm-4">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="status" id="input-stattus-up" value="up" checked> Up
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="status" id="input-stattus-down" value="down"> Down
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">ipv4</label>
+                                <div class="col-sm-6">
+                                    <input type="email" class="form-control" id="input-ipv4" placeholder="192.168.20.135">
+                                </div>
+                                <div class="col-sm-1" style="margin-left: -10px">
+                                    <h4>/</h4>
+                                </div>
+                                <div class="col-sm-2" style="margin-left: -20px">
+                                    <input type="email" class="form-control" id="input-ipv4-prefix" placeholder="24">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">ipv6</label>
+                                <div class="col-sm-6">
+                                    <input type="email" class="form-control" id="input-ipv6" placeholder="FE80::">
+                                </div>
+                                <div class="col-sm-1" style="margin-left: -10px">
+                                    <h4>/</h4>
+                                </div>
+                                <div class="col-sm-2" style="margin-left: -20px">
+                                    <input type="email" class="form-control" id="input-ipv6-prefixv6" placeholder="10">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">VLAN</label>
+                                <div class="col-sm-8">
+                                    <select id="input-vlan" class="form-control ">
+                                        <option>VLAN 1</option>
+                                        <option>VLAN 10</option>
+                                        <option>VLAN 20</option>
+                                        <option>VLAN 30</option>
+                                        <option>VLAN 50</option>
+                                        <option>VLAN 99</option>
+                                        <option>VLAN 100</option>
+                                        <option>VLAN 200</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    <input id="btn-peizhi" type="button" class="btn btn-primary" value="配置" style="outline: none;margin-left: 200px">
+                                </div>
+                            </div>
+
+
+                            <div style="width: 100%;height: 30px">
+                                <!--占位符作用-->
+                            </div>
+                        </form>
+                    </div>
+                    <div tab-id="2" class="tab">
+                        <div id="rizhi3" style="margin-left: 15px">
+                            <h4>Command</h4>
+                            <input  type="text" id="command-text" name="command" class="form-control" rows="5" placeholder="show system image-verification"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <input id="btn-command-send" type="button" class="btn btn-primary" value="Send" style="outline: none;margin-top: 10px;outline: none">
+                        </div>
+                        <div id="rizhi4" style="margin-left: 15px;width: 100%;height: 300px;margin-top: 65px">
+                            <pre id="json-renderer" style="height: auto;"></pre>
+                        </div>
+
+
+
+                        <div style="width: 100%;height: 30px">
+                            <!--占位符作用-->
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!--侧边栏-->
+<div class="nav" style="width: 200px;height: 100%;">
+    <div class="nav-top">
+        <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="images/mini.png" ></div>
+    </div>
+    <ul>
+        <li class="nav-item">
+            <a id="a-huanjing" href="javascript:;"><i class="my-icon nav-icon icon_1"></i><span>环境管理</span><i class="my-icon nav-more"></i></a>
+            <ul>
+                <li><a id="nav-item-tuopu" href="javascript:;"><span>网络拓扑</span></a></li>
+                <li><a id="nav-item-info" href="javascript:;"><span>流量统计</span></a></li>
+                <li><a id="nav-item-yichang" href="javascript:;"><span>异常通知</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a id="a-shebei" href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>设备管理</span><i class="my-icon nav-more"></i></a>
+            <ul>
+                <li><a id="nav-item-shebei" href="javascript:;"><span>设备列表</span></a></li>
+                <li><a id="nav-item-rizhi" href="javascript:;"><span>设备配置</span></a></li>
+            </ul>
+        </li>
+        <!--<li class="nav-item">-->
+            <!--<a href="javascript:;"><i class="my-icon nav-icon icon_3"></i><span>其  它</span><i class="my-icon nav-more"></i></a>-->
+            <!--<ul>-->
+                <!--<li><a id="nav-item-guanyu" href="javascript:;"><span>关于我们</span></a></li>-->
+            <!--</ul>-->
+        <!--</li>-->
+    </ul>
+</div>
+
+
+
+
+
+</body>
+</html>
+<script src='js/stopExecutionOnTimeout.js?t=1'></script>
+<!--这一部分是点击跳转网页并保持导航条展开状态-->
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (!$('#a-shebei').hasClass('nav-mini')) {
+            if ($('.nav').next().css('display') == "none") {
+
+                $('#nav-item-rizhi').css("text-decoration", "underline");
+                //展开未展开
+                $('.nav-item').children('ul').slideUp(0);
+                $('#a-shebei').next('ul').slideDown(0);
+                $('#a-shebei').parent('li').addClass('nav-show').siblings('li').removeClass('nav-show');
+            }else{
+                //收缩已展开
+                $('#a-shebei').next('ul').slideUp(300);
+                $('.nav-item.nav-show').removeClass('nav-show');
+            }
+        }
+    })
+
+    $('#json-renderer').hide();
+    $("#btn-peizhi").attr('disabled',"true");
+    // 登录按钮事件
+    $("#btn-denglu").click(function () {
+        Notiflix.Loading.Init({
+            cssAnimation:true,
+            cssAnimationDuration:300,
+            clickToClose:true,
+        });
+        Notiflix.Loading.Circle('Please wait...');
+        var mydata = "show version";
+        $.ajax({
+            url:"http://127.0.0.1:5000/show",
+            type:"POST",
+            crossDomain:true,
+            data:JSON.stringify(mydata),
+            dataType:"json",
+            contentType:"application/json",
+            success:function (res) {
+                Notiflix.Loading.Remove()   // 关闭loading界面
+                Notiflix.Report.Init();
+                Notiflix.Report.Success(
+                    '登录成功',
+                    " ",
+                    "OK"
+                );
+                $("#btn-peizhi").removeAttr("disabled");
+            },
+            error:function () {
+                Notiflix.Loading.Remove()   // 关闭loading界面
+
+                console.log('请求失败')
+            }
+        })
+
+    })
+
+    // CLI命令发送事件
+    $("#btn-command-send").click(function () {
+        Notiflix.Loading.Init({
+            cssAnimation:true,
+            cssAnimationDuration:400,
+            clickToClose:true,
+        })
+        Notiflix.Loading.Circle('Please wait...');
+        var mydata = document.getElementById("command-text").value;
+        $.ajax({
+            url:"http://127.0.0.1:5000/show",
+            type:"POST",
+            crossDomain:true,
+            data:JSON.stringify(mydata),
+            dataType:"json",
+            contentType:"application/json",
+            success:function (res) {
+                Notiflix.Loading.Remove()   // 关闭loading界面
+                console.log(res);
+                $('#json-renderer').show();
+                $('#json-renderer').jsonViewer(res);     // 显示返回的json数据
+                Notiflix.Notify.Init();
+                Notiflix.Notify.Success('命令发送成功！');
+
+            },
+            error:function () {
+                Notiflix.Loading.Remove()   // 关闭loading界面
+                Notiflix.Notify.Init();
+                Notiflix.Notify.Failure('命令发送失败');
+                console.log('请求失败')
+            }
+        })
+        document.getElementById("command-text").value = "";
+    })
+
+    //配置按钮点击事件
+    $("#btn-peizhi").click(function () {
+        Notiflix.Loading.Init({
+            cssAnimation:true,
+            cssAnimationDuration:400,
+            clickToClose:true,
+        })
+        Notiflix.Loading.Circle('Please wait...');
+
+        var tmp = document.getElementById("input-interface");
+        myinterface = tmp.value;
+
+        var status = $('input[name="status"]:checked').val();
+        var info = {
+            "hostname":document.getElementById("input-hostname").value,
+            "interface":myinterface,
+            "status":status,
+            "ipv4":"192.168.0.1"
+        }
+        console.log(info)
+        $.ajax({
+            url:"http://127.0.0.1:5000/peizhi",
+            type:"POST",
+            crossDomain:true,
+            data:JSON.stringify(info),
+            dataType:"json",
+            contentType:"application/json",
+            success:function (res) {
+                Notiflix.Loading.Remove()   // 关闭loading界面
+                Notiflix.Notify.Init();
+                Notiflix.Notify.Success("配置成功");
+            },
+            error:function () {
+                Notiflix.Loading.Remove()   // 关闭loading界面
+                Notiflix.Notify.Init();
+                Notiflix.Notify.Failure('服务器错误');
+            }
+        })
+        document.getElementById("input-hostname").value = "";
+    })
+
+
+    $(document).ready(function () {
+        var activePos = $('.tabs-header .active').position();
+        function changePos() {
+            activePos = $('.tabs-header .active').position();
+            $('.border').stop().css({
+                left: activePos.left,
+                width: $('.tabs-header .active').width()
+            });
+        }
+        changePos();
+        var tabHeight = $('.tab.active').height();
+        function animateTabHeight() {
+            tabHeight = $('.tab.active').height();
+            $('.tabs-content').stop().css({ height: tabHeight + 'px' });
+        }
+        animateTabHeight();
+        function changeTab() {
+            var getTabId = $('.tabs-header .active a').attr('tab-id');
+            $('.tab').stop().fadeOut(300, function () {
+                $(this).removeClass('active');
+            }).hide();
+            $('.tab[tab-id=' + getTabId + ']').stop().fadeIn(300, function () {
+                $(this).addClass('active');
+                animateTabHeight();
+            });
+        }
+        $('.tabs-header a').on('click', function (e) {
+            e.preventDefault();
+            var tabId = $(this).attr('tab-id');
+            $('.tabs-header a').stop().parent().removeClass('active');
+            $(this).stop().parent().addClass('active');
+            changePos();
+            tabCurrentItem = tabItems.filter('.active');
+            $('.tab').stop().fadeOut(300, function () {
+                $(this).removeClass('active');
+            }).hide();
+            $('.tab[tab-id="' + tabId + '"]').stop().fadeIn(300, function () {
+                $(this).addClass('active');
+                animateTabHeight();
+            });
+        });
+        var tabItems = $('.tabs-header ul li');
+        var tabCurrentItem = tabItems.filter('.active');
+        $('#next').on('click', function (e) {
+            e.preventDefault();
+            var nextItem = tabCurrentItem.next();
+            tabCurrentItem.removeClass('active');
+            if (nextItem.length) {
+                tabCurrentItem = nextItem.addClass('active');
+            } else {
+                tabCurrentItem = tabItems.first().addClass('active');
+            }
+            changePos();
+            changeTab();
+        });
+        $('#prev').on('click', function (e) {
+            e.preventDefault();
+            var prevItem = tabCurrentItem.prev();
+            tabCurrentItem.removeClass('active');
+            if (prevItem.length) {
+                tabCurrentItem = prevItem.addClass('active');
+            } else {
+                tabCurrentItem = tabItems.last().addClass('active');
+            }
+            changePos();
+            changeTab();
+        });
+        $('[ripple]').on('click', function (e) {
+            var rippleDiv = $('<div class="ripple" />'), rippleOffset = $(this).offset(), rippleY = e.pageY - rippleOffset.top, rippleX = e.pageX - rippleOffset.left, ripple = $('.ripple');
+            rippleDiv.css({
+                top: rippleY - ripple.height() / 2,
+                left: rippleX - ripple.width() / 2,
+                background: $(this).attr('ripple-color')
+            }).appendTo($(this));
+            window.setTimeout(function () {
+                rippleDiv.remove();
+            }, 1500);
+        });
+    });
+
+
+</script>

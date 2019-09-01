@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--引入bootstrap文件-->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!--引入font-awesome-->
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <!--引入Echarts文件-->
+    <script src="js/echarts.min.js"></script>
+    <!--引入侧边导航栏-->
+    <link href="css/htmleaf-demo.css" rel="stylesheet">
+    <link href="css/nav.css" rel="stylesheet">
+    <link href="fonts/iconfont.css", rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/nav.js"></script>
+
+    <link href="css/notiflix-1.3.0.min.css" rel="stylesheet">
+    <script type="text/javascript" src="js/notiflix-1.3.0.min.js"></script>
+
+    <title>异常通知</title>
+
+    <style>
+        div.card{
+            background-color: white;
+            width: 47.5%;
+            height: 47%;
+            margin: 10px;
+            margin-left: 15px;
+            float: left;
+            border-radius: 15px;
+            box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+        div.sub-card{
+            width: 45%;
+            height:45%;
+            margin: 5px;
+            margin-top: 10px;
+            margin-left:10px;
+            float: left;
+            border-radius: 15px;
+            box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+        div.card-left{
+            margin: 20px;
+            padding-left: 10px;
+            width: 40%;
+            height: 100%;
+            color: white;
+            float: left;
+        }
+        div.card-right{
+            margin-top: 20px;
+            margin-right: 20px;
+            width: auto;
+            height: 100%;
+            color: white;
+            float: left;
+            font-size: 60px;
+        }
+        .table{
+            color: black;
+            font-size: 15px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="placehold" style="width: 200px;height: 100%;float: left"></div>
+
+<div id="main" style="width: 1100px;height: 100%; float: left;margin-left: 20px;">
+    <div class="card">
+        <div class="sub-card" style="background-color: yellow;">
+            <div class="card-left">
+                <span class="fa fa-warning fa-5x"></span>
+                <h4>警告数目</h4>
+            </div>
+            <div class="card-right">
+                <p id="warning_num">0</p>
+            </div>
+        </div>
+        <div class="sub-card" style="background-color: orangered">
+            <div class="card-left">
+                <span class="fa fa-minus-circle fa-5x"></span>
+                <h4>错误数目</h4>
+            </div>
+            <div class="card-right">
+                <p id="error_num">0</p>
+            </div>
+        </div>
+        <div class="sub-card" style="background-color: green">
+            <div class="card-left">
+                <span class="fa fa-check fa-5x"></span>
+                <h4>正常设备</h4>
+            </div>
+            <div class="card-right">
+                <p>18</p>
+            </div>
+        </div>
+        <div class="sub-card" style="background-color: gray">
+            <div class="card-left">
+                <span class="fa fa-question fa-5x"></span>
+                <h4>故障设备</h4>
+            </div>
+            <div class="card-right">
+                <p>13</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="card">
+        <div id="bar-chart" style="width: 100%;height: 100%;"></div>
+
+    </div>
+    <div class="card" style="padding: 10px">
+        <table id="exception-table" name="mytable" class="table table-hover">
+            <tr class="alert-success">
+                <th>id</th>
+                <th>时间</th>
+                <th>异常类型</th>
+                <th>优先级</th>
+                <th>描述</th>
+            </tr>
+        </table>
+    </div>
+    <div class="card">
+
+        <div id="pie-chart" style="width: 100%;height: 100%;"></div>
+    </div>
+
+
+</div>
+
+
+<!--侧边栏-->
+<div class="nav" style="width: 200px;height: 100%;">
+    <div class="nav-top">
+        <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="images/mini.png" ></div>
+    </div>
+    <ul>
+        <li class="nav-item">
+            <a id="a-huanjing" href="javascript:;"><i class="my-icon nav-icon icon_1"></i><span>环境管理</span><i class="my-icon nav-more"></i></a>
+            <ul>
+                <li><a id="nav-item-tuopu" href="javascript:;"><span>网络拓扑</span></a></li>
+                <li><a id="nav-item-info" href="javascript:;"><span>流量统计</span></a></li>
+                <li><a id="nav-item-yichang" href="javascript:;"><span>异常通知</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a id="a-shebei" href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>设备管理</span><i class="my-icon nav-more"></i></a>
+            <ul>
+                <li><a id="nav-item-shebei" href="javascript:;"><span>设备列表</span></a></li>
+                <li><a id="nav-item-rizhi" href="javascript:;"><span>设备配置</span></a></li>
+            </ul>
+        </li>
+        <!--<li class="nav-item">-->
+            <!--<a href="javascript:;"><i class="my-icon nav-icon icon_3"></i><span>其  它</span><i class="my-icon nav-more"></i></a>-->
+            <!--<ul>-->
+                <!--<li><a id="nav-item-guanyu" href="javascript:;"><span>关于我们</span></a></li>-->
+            <!--</ul>-->
+        <!--</li>-->
+    </ul>
+</div>
+
+
+
+
+
+</body>
+</html>
+
+<!--这一部分是点击跳转网页并保持导航条展开状态-->
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (!$('#a-huanjing').hasClass('nav-mini')) {
+            if ($('.nav').next().css('display') == "none") {
+
+                $('#nav-item-yichang').css("text-decoration", "underline");
+                //展开未展开
+                $('.nav-item').children('ul').slideUp(0);
+                $('#a-huanjing').next('ul').slideDown(0);
+                $('#a-huanjing').parent('li').addClass('nav-show').siblings('li').removeClass('nav-show');
+            }else{
+                //收缩已展开
+                $('#a-huanjing').next('ul').slideUp(300);
+                $('.nav-item.nav-show').removeClass('nav-show');
+            }
+        }
+    })
+
+    var pieChart = echarts.init(document.getElementById('pie-chart'));
+    var option = {
+        title:{
+            text:"异常种类"
+        },
+        series:[{
+            name:'访问来源',
+            type:'pie',
+            roseType:'angle',
+            data:[
+                {value:3,name:'设备异常'},
+                {value:5,name:'链路异常'},
+                {value:9,name:'流量超限'},
+                {value:7,name:'接口异常'},
+            ]
+        }]
+    };
+    pieChart.setOption(option);
+
+    var data=[0,0,0,0];
+    var barChart = echarts.init(document.getElementById('bar-chart'));
+    var option = {
+        title:{
+            text:"流量种类"
+        },
+        tooltip:{},
+//                    legend:{
+//                        data:['销量']
+//                    },
+        xAxis:{
+            data:["ip","tcp","udp","snmp"]
+        },
+        yAxis:{},
+        series:[{
+            name:'流量包',
+            type:'bar',
+            data:data
+        }],
+        color:['#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3']
+    };
+    barChart.setOption(option);
+
+
+    String.prototype.format = function(){
+        if(arguments.length==0){
+            return this;
+        }
+        for(var s=this, i=0; i<arguments.length; i++){
+            s = s.replace(new RegExp("\\{"+i+"\\}","g"), arguments[i]);
+        }
+        return s;
+    };
+
+    Date.prototype.Format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "H+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+
+    var warning_num=0;
+    var error_num=0;
+
+    // 流量异常检测模块-----------------------------------------
+    var maxValue=1;
+    var last_in=-1;
+    var last_out=-1;
+    function get_liuliang_from_device(device) {
+        setInterval(function () {
+            $.ajax({
+                url:"http://127.0.0.1:5000/showr/"+device,
+                type:"GET",
+                crossDomain:true,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (res) {
+                    var ru = res.sumin;
+                    var chu = res.sumout;
+//                    ru = ru/1000;                       //转换成Mb
+//                    chu = chu/1000;
+                    if(last_in!=-1&&last_out!=-1){
+                        theta_ru = ru-last_in;
+//                        theta_chu = chu-last_out;
+                        theta_ru = Math.floor(theta_ru*100)/100;          //保留2位小数
+//                        theta_chu = Math.floor(theta_chu*100)/100;
+                        console.log(theta_ru);
+                        if(theta_ru>maxValue){
+                            warning_num++;
+                            Notiflix.Notify.Init();
+                            Notiflix.Notify.Warning('流量超限，请注意！');
+                            $("#warning_num").html(warning_num);
+                            insertRow(get_current_id(),get_current_time(),"流量超限",2,"主干链路流量过大","alert-warning");
+                            maxValue=maxValue*2;
+                        }
+                    }
+                    last_in = ru;
+                    last_out = chu;
+                },
+                error:function () {
+                    console.log('请求失败');
+                }
+            })
+        },1000);
+    }
+    get_liuliang_from_device("R1");
+
+    var tempcnt=0;
+    var tempcnt2=0;
+    // 接口down检测
+    setInterval(function () {
+        $.ajax({
+            url:"http://127.0.0.1:5000/getException",
+            type:"GET",
+            crossDomain:true,
+            dataType:"json",
+            contentType:"application/json",
+            success:function (res) {
+                console.log(res[0]);
+                if(res.length>0)
+                {
+                    for(var i=0;i<res.length;i++){
+                        var exceptType = res[i].excType;
+                        var execptDes = res[i].excContent;
+                        if(exceptType=="portExc"&&tempcnt==0){
+                            error_num++;
+                            Notiflix.Notify.Init();
+                            Notiflix.Notify.Failure('接口异常，请注意！');
+                            $("#error_num").html(error_num);
+                            insertRow(get_current_id(),get_current_time(),"接口异常",4,execptDes,"alert-danger");
+                            tempcnt=1;   //只显示一次
+                        }
+                        if(exceptType=="deviceExc"&&tempcnt2==0){
+                            error_num++;
+                            Notiflix.Notify.Init();
+                            Notiflix.Notify.Failure('设备异常，请注意！');
+                            $("#error_num").html(error_num);
+                            insertRow(get_current_id(),get_current_time(),"设备异常",5,execptDes,"alert-danger");
+                            tempcnt2=1;   //只显示一次
+                        }
+                    }
+                }else{
+                    var tableObj = document.getElementById("exception-table");
+                    for (var i = 0; i < tableObj.rows.length; i++) {    //遍历Table的所有Row
+                        if(tableObj.rows[i].cells[3].innerText==4||tableObj.rows[i].cells[3].innerText==5){
+                            tableObj.deleteRow(i);
+                            error_num--;
+                            $("#error_num").html(error_num);
+                        }
+                    }
+                }
+            },
+            error:function () {
+                console.log('请求失败');
+            }
+        })
+    },6000)
+
+
+    
+    function insertRow(id,time,type,priority,description,notifyclass) {
+        var tables = $('table[name=mytable]');
+        var result="";
+        result +="<tr class=\"{0}\">".format(notifyclass);
+        result +="<td>{0}</td>".format(id);
+        result +="<td>{0}</td>".format(time);
+        result +="<td>{0}</td>".format(type);
+        result +="<td>{0}</td>".format(priority);
+        result +="<td>{0}</td>".format(description);
+        result +="</tr>";
+        $("#Result tbody").append(result);
+        tables.append(result);
+    }
+
+    function get_current_time() {
+        var time = new Date().Format("MM/dd HH:mm:  ss")
+        return time;
+    }
+    function get_current_id() {
+        var len = $("#exception-table").find("tr").length;
+        return len;
+    }
+
+
+
+    setInterval(function () {
+        $.ajax({
+            url:"http://127.0.0.1:5000/showPType/8090",
+            type:"GET",
+            crossDomain:true,
+            dataType:"json",
+            contentType:"application/json",
+            success:function (res) {
+                data[0] = res.in.ipin;
+                data[1] = res.in.tcpin;
+                data[2] = res.in.udpin;
+                data[3] = res.in.snmpin;
+                barChart.setOption(option);
+            },
+            error:function () {
+                console.log('请求失败');
+            }
+        })
+    },3000)
+</script>

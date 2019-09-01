@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--引入bootstrap文件-->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!--引入Echarts文件-->
+    <script src="js/echarts.min.js"></script>
+    <!--引入侧边导航栏-->
+    <link href="css/htmleaf-demo.css" rel="stylesheet">
+    <link href="css/nav.css" rel="stylesheet">
+    <link href="fonts/iconfont.css", rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/nav.js"></script>
+
+    <title>关于我们</title>
+
+</head>
+<body>
+
+<div id="placehold" style="width: 200px;height: 100%;float: left"></div>
+
+<div id="main" style="width: 1100px;height: 100%; float: left;margin-left: 20px;">
+    <h1>日志内容</h1>
+    <!--......-->
+
+</div>
+
+
+<!--侧边栏-->
+<div class="nav" style="width: 200px;height: 100%;">
+    <div class="nav-top">
+        <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="images/mini.png" ></div>
+    </div>
+    <ul>
+        <li class="nav-item">
+            <a id="a-huanjing" href="javascript:;"><i class="my-icon nav-icon icon_1"></i><span>环境管理</span><i class="my-icon nav-more"></i></a>
+            <ul>
+                <li><a id="nav-item-tuopu" href="javascript:;"><span>网络拓扑</span></a></li>
+                <li><a id="nav-item-info" href="javascript:;"><span>流量统计</span></a></li>
+                <li><a id="nav-item-yichang" href="javascript:;"><span>异常通知</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a id="a-shebei" href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>设备管理</span><i class="my-icon nav-more"></i></a>
+            <ul>
+                <li><a id="nav-item-shebei" href="javascript:;"><span>设备列表</span></a></li>
+                <li><a id="nav-item-rizhi" href="javascript:;"><span>设备配置</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a id="a-qita" href="javascript:;"><i class="my-icon nav-icon icon_3"></i><span>其  它</span><i class="my-icon nav-more"></i></a>
+            <ul>
+                <li><a id="nav-item-guanyu" href="javascript:;"><span>关于我们</span></a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+
+
+
+</body>
+</html>
+
+<!--这一部分是点击跳转网页并保持导航条展开状态-->
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (!$('#a-qita').hasClass('nav-mini')) {
+            if ($('.nav').next().css('display') == "none") {
+
+                $('#nav-item-guanyu').css("text-decoration", "underline");
+                //展开未展开
+                $('.nav-item').children('ul').slideUp(0);
+                $('#a-qita').next('ul').slideDown(0);
+                $('#a-qita').parent('li').addClass('nav-show').siblings('li').removeClass('nav-show');
+            }else{
+                //收缩已展开
+                $('#a-qita').next('ul').slideUp(300);
+                $('.nav-item.nav-show').removeClass('nav-show');
+            }
+        }
+    })
+
+</script>
