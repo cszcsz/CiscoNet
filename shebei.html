@@ -24,21 +24,22 @@
     <script type="text/javascript">
         // the data table itself
         var dataTable = null;
+        var dataTable2 = null;
         jQuery(document).ready(function () {
             dataTable = jQuery("#dataTable").raytable({
                 datasource: { data: [], keyfield: 'id' },
                 columns: [
 
-                    { field: "name", title: "设备名称", sort:true },
-                    { field: "type", title: "设备类型", sort: true },
-                    { field: "model", title: "设备型号" },
-                    { field: "ip", title: "管理ip地址", sort: true },
-                    { field: "status", title: "状态" }
-
-                    // { field: "hostname", title: "设备名称", sort:true },
+                    // { field: "name", title: "设备名称", sort:true },
                     // { field: "type", title: "设备类型", sort: true },
+                    // { field: "model", title: "设备型号" },
                     // { field: "ip", title: "管理ip地址", sort: true },
-                    // { field: "time", title: "最近更新时间" }
+                    // { field: "status", title: "状态" }
+
+                    { field: "hostname", title: "设备名称", sort:true },
+                    { field: "type", title: "设备型号", sort: true },
+                    { field: "ip", title: "管理ip地址", sort: true },
+                    { field: "role", title: "层次" }
                 ],
                 pagesize: 10,
                 maxPageButtons: 5,
@@ -47,8 +48,7 @@
             });
             jQuery(".glyphicon").css('cursor', 'pointer');
 
-            // load some default
-            //doLoad(jQuery("#dataTable"));
+
 
         });
 
@@ -56,135 +56,236 @@
         function doLoad(sender) {
             Notiflix.Loading.Init({
                 cssAnimation:true,
-                cssAnimationDuration:400,
+                cssAnimationDuration:300,
                 clickToClose:true,
+                svgColor:"#0083b4"
             });
-            Notiflix.Loading.Dots('Please wait...');
-            // $.ajax({
-            //        url:"http://127.0.0.1:5000/getDeviceFromDNAC",
-            //        type:"GET",
-            //        crossDomain:true,
-            //        dataType: "json",
-            //        contentType: "application/json",
-            //         success: function (res) {
-            //             Notiflix.Loading.Remove()   // 关闭loading界面
-            //             myData = res                 // 关键的地方
-            //
-            //             // how many records to bind
-            //             var size = jQuery("#sizeMenu").val();
-            //
-            //             if (size < 0)
-            //             {dataTable.data(myData,'id');}
-            //             else if (size == 0)
-            //             {dataTable.data([],'id');}
-            //             else
-            //             {dataTable.data(myData.slice(0,size),'id');}
-            //
-            //         },
-            //         error: function () {
-            //             Notiflix.Loading.Remove()   // 关闭loading界面
-            //             console.log('请求失败');
-            //         }
-            //     });
+            Notiflix.Loading.Circle('Please wait...');
+            $.ajax({
+                   url:"http://127.0.0.1:5000/getDeviceFromDNAC",
+                   type:"GET",
+                   crossDomain:true,
+                   dataType: "json",
+                   contentType: "application/json",
+                    success: function (res) {
+                        Notiflix.Loading.Remove()   // 关闭loading界面
+                        myData = res                 // 关键的地方
+
+                        // how many records to bind
+                        var size = jQuery("#sizeMenu").val();
+
+                        if (size < 0)
+                        {dataTable.data(myData,'id');}
+                        else if (size == 0)
+                        {dataTable.data([],'id');}
+                        else
+                        {dataTable.data(myData.slice(0,size),'id');}
+
+                    },
+                    error: function () {
+                        Notiflix.Loading.Remove()   // 关闭loading界面
+                        console.log('请求失败');
+                    }
+                });
 
 //下面为在eve平台上写的请求，如要还原，请取消注释并把上面的注释掉
-            $.ajax({
-                url: "http://127.0.0.1:5000/getDeviceInfo",
-                type: "GET",
-                crossDomain: true,
-                dataType: "json",
-                contentType: "application/json",
-                success: function (res) {
-                    Notiflix.Loading.Remove()   // 关闭loading界面
-                    var R1 = res[0].dName;
-                    var R2 = res[1].dName;
-                    myData[2].name = R1;
-                    myData[3].name = R2;
-
-                    // how many records to bind
-                    var size = jQuery("#sizeMenu").val();
-
-                    if (size < 0)
-                    {dataTable.data(myData,'id');}
-                    else if (size == 0)
-                    {dataTable.data([],'id');}
-                    else
-                    {dataTable.data(myData.slice(0,size),'id');}
-
-                },
-                error: function () {
-                    Notiflix.Loading.Remove()   // 关闭loading界面
-                    console.log('请求失败');
-                }
-            });
+//             $.ajax({
+//                 url: "http://127.0.0.1:5000/getDeviceInfo",
+//                 type: "GET",
+//                 crossDomain: true,
+//                 dataType: "json",
+//                 contentType: "application/json",
+//                 success: function (res) {
+//                     Notiflix.Loading.Remove()   // 关闭loading界面
+//                     var R1 = res[0].dName;
+//                     // var R2 = res[1].dName;
+//                     myData[2].name = R1;
+//                     // myData[3].name = R2;
+//
+//                     // how many records to bind
+//                     var size = jQuery("#sizeMenu").val();
+//
+//                     if (size < 0)
+//                     {dataTable.data(myData,'id');}
+//                     else if (size == 0)
+//                     {dataTable.data([],'id');}
+//                     else
+//                     {dataTable.data(myData.slice(0,size),'id');}
+//
+//                 },
+//                 error: function () {
+//                     Notiflix.Loading.Remove()   // 关闭loading界面
+//                     console.log('请求失败');
+//                 }
+//             });
 
 
 
         }
-        // icon clicked event handler
-        function iconAction(event)
-        {
-            // jquery to get the record ID back out
-            var data = jQuery(event.target).data('ray-data');
-            alert('glyph icon data is ' + data);
-            //alert('You clicked the icon with data = ' + event.data.id + ' on row ' + event.data.rowIdx );
-        }
+
 
         // row clicked handler
         function rowAction(event)
         {
-            // jquery to get the record ID back out
-            //var id = jQuery(event.target).data('ray-key');
-            // alert('You clicked row ' + event.data.rowIdx + ' with object ID ' + event.data.id );
             Notiflix.Loading.Init({
                 cssAnimation:true,
-                cssAnimationDuration:300,
+                cssAnimationDuration:200,
                 clickToClose:true,
+                svgColor:"#0083b4"
             });
-            Notiflix.Loading.Dots('loading...');
-            var mydata = "show version";
+            Notiflix.Loading.Pulse('loading...');
+            var index = event.data.id-1;
+            var deviceId = myData[event.data.id-1]['uuid'];
+            $("#hostname").html(myData[index]['hostname']);
+            $("#softwareType").html(myData[index]['softwareType']);
+            $("#softwareVersion").html(myData[index]['softwareVersion']);
+            $("#lastUpdated").html(myData[index]['lastUpdated']);
+            $("#uuid").html(myData[index]['uuid']);
+            $("#family").html(myData[index]['family']);
+            // $("#serialNumber").html(myData[index]['serialNumber']);
+            var num = parseInt(myData[index]['memorySize']);
+            num=num/1024.0/1024.0;
+            num=Math.floor(num * 100)/100
+            $("#memorySize").html(num+" MB");
+
+            getDeviceInterfaceInfo(deviceId);
+            console.log(deviceId);
+
+
+            // alert('You clicked row ' + event.data.rowIdx + ' with object ID ' + event.data.id +myData );
+
+            // Notiflix.Loading.Init({
+            //     cssAnimation:true,
+            //     cssAnimationDuration:300,
+            //     clickToClose:true,
+            // });
+            // Notiflix.Loading.Dots('loading...');
+            //
+            // $.ajax({
+            // url:"http://127.0.0.1:5000/get_device_detail",
+            // type:"GET",
+            // crossDomain:true,
+            // dataType:"json",
+            // contentType:"application/json",
+            // success:function (res) {
+            //     Notiflix.Loading.Remove()   // 关闭loading界面
+            //         $( "#checkandPass" ).dialog({
+            //         autoOpen: true,
+            //         width: 765 ,
+            //         show: "blind",
+            //         hide: "explode",
+            //         modal: true,//设置背景灰的
+            //         });
+            //
+            //     console.log(res.result.body);
+            // },
+            // error:function () {
+            //     Notiflix.Loading.Remove()   // 关闭loading界面
+            //      }
+            // });
+
+
+
+            //-------------------------------------------------------
+            // var mydata = "show version";
+            // $.ajax({
+            //     url:"http://127.0.0.1:5000/show",
+            //     type:"POST",
+            //     crossDomain:true,
+            //     data:JSON.stringify(mydata),
+            //     dataType:"json",
+            //     contentType:"application/json",
+            //     success:function (res) {
+            //         Notiflix.Loading.Remove()   // 关闭loading界面
+            //         var manufacturer ="制造商:" + res.result.body.manufacturer+'<br/>';
+            //         var kick_file_name = "内核文件: "+res.result.body.kick_file_name;
+            //         var memory = "内存: "+res.result.body.memory+" kB";
+            //         var proc_board_id = "ID: "+res.result.body.proc_board_id;
+            //         var kick_tmstmp= "时间戳: "+res.result.body.kick_tmstmp;
+            //         Notiflix.Report.Init();
+            //         Notiflix.Report.Info(
+            //             '设备版本信息',
+            //             manufacturer+'\n'+kick_file_name+'\n'+memory+'\n'+proc_board_id+'\n'+kick_tmstmp,
+            //             "OK"
+            //         );
+            //         console.log(res.result.body);
+            //     },
+            //     error:function () {
+            //         Notiflix.Loading.Remove()   // 关闭loading界面
+            //     }
+            // });
+
+        }
+
+        function getDeviceInterfaceInfo(uuid) {
             $.ajax({
-                url:"http://127.0.0.1:5000/show",
-                type:"POST",
-                crossDomain:true,
-                data:JSON.stringify(mydata),
-                dataType:"json",
-                contentType:"application/json",
-                success:function (res) {
-                    Notiflix.Loading.Remove()   // 关闭loading界面
-                    var manufacturer ="制造商:" + res.result.body.manufacturer+'<br/>';
-                    var kick_file_name = "内核文件: "+res.result.body.kick_file_name;
-                    var memory = "内存: "+res.result.body.memory+" kB";
-                    var proc_board_id = "ID: "+res.result.body.proc_board_id;
-                    var kick_tmstmp= "时间戳: "+res.result.body.kick_tmstmp;
-                    Notiflix.Report.Init();
-                    Notiflix.Report.Info(
-                        '设备版本信息',
-                        manufacturer+'\n'+kick_file_name+'\n'+memory+'\n'+proc_board_id+'\n'+kick_tmstmp,
-                        "OK"
-                    );
-                    console.log(res.result.body);
-                },
-                error:function () {
-                    Notiflix.Loading.Remove()   // 关闭loading界面
+            url:"http://127.0.0.1:5000/get_device_interface/"+uuid,
+            type:"GET",
+            crossDomain:true,
+            dataType:"json",
+            contentType:"application/json",
+            success:function (res) {
+                Notiflix.Loading.Remove();   // 关闭loading界面
+                console.log(res);
+
+                var tb = $('#interfaceTable tbody');
+                $(tb).empty();
+                if(res && res.length<10)
+                {
+                    for(var i=0;i<res.length;i++)
+                    {
+                        var tr = $('<tr>');
+                        $(tr).append('<td>'+res[i].id+'</td>');
+                        $(tr).append('<td>'+res[i].interfaceName+'</td>');
+                        $(tr).append('<td>'+res[i].macAddress+'</td>');
+                        $(tr).append('<td>'+res[i].mode+'</td>');
+                        console.log(res[i].status);
+                        if(res[i].status=="down") {
+                            $(tr).append('<td><span style="color: red;">'+res[i].status+'</span></td>');
+                        }
+                        else {
+                           $(tr).append('<td><span style="color: green;">'+res[i].status+'</span></td>');
+                        }
+
+                        $(tb).append(tr);
+                    }
                 }
-            })
+                else if(res && res.length>=10)
+                {
+                    for(var i=0;i<10;i++)
+                    {
+                        var tr = $('<tr>');
+                        $(tr).append('<td>'+res[i].id+'</td>');
+                        $(tr).append('<td>'+res[i].interfaceName+'</td>');
+                        $(tr).append('<td>'+res[i].macAddress+'</td>');
+                        $(tr).append('<td>'+res[i].mode+'</td>');
+                        if(res[i].status=="down") {
+                           $(tr).append('<td><span style="color: red;">'+res[i].status+'</span></td>');
+                        }
+                        else {
+                           $(tr).append('<td><span style="color: green;">'+res[i].status+'</span></td>');
+                        }
+                        $(tb).append(tr);
+                    }
+                }
+                $('#showdiv').show();  //显示弹窗
+                $('#cover').css('display','block'); //显示遮罩层
+                $('#cover').css('height',document.body.clientHeight+'px');
 
+            },
+            error:function () {
+                Notiflix.Loading.Remove()   // 关闭loading界面
+                Notiflix.Report.Init();
+                Notiflix.Report.Info(
+                    '提示',
+                    '该设备没有接口列表可供显示',
+                    "OK"
+                );
+             }
+            });
         }
 
-        // boolean handler to determine if the cell content is rendered
-        function isManager(item)
-        {
-            return (item.grade > 4);
-        }
 
-        // custom format handler
-        function parseDate(item)
-        {
-            // source is ISO 8601
-            var d = new Date(item.birthDate);
-            return d.toDateString();
-        }
     </script>
 
     <style type="text/css">
@@ -204,6 +305,37 @@
             border-radius: 15px;
             outline: none;
             box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+        #showdiv{
+            border-radius: 15px;
+            box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+        #card-right{
+            color: black;
+        }
+        #card-left{
+            padding: 0px;
+        }
+        #interfaceTable{
+            margin-top: 30px;
+        }
+        #overview{
+            color: #1ab2ff;
+            margin-left: 20px;
+        }
+
+        #left-left{
+            color: darkgrey;
+            font-family: Consolas;
+            padding-left: 35px;
+
+        }
+        #left-right{
+            color: black;
+
+        }
+        h4{
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -239,7 +371,81 @@
         </div>
     </div>
 
+
+        <!-- 遮罩层 -->
+    <div id="cover" style="background: #000; position: absolute; left: 0px; top: 0px; width: 100%; filter: alpha(opacity=30); opacity: 0.3; display: none; z-index: 2 ">
+
+    </div>
+    <!-- 弹窗 -->
+    <div id="showdiv" style="width: 80%; margin: 0 auto; height: 80%; border: 1px solid #999; display: none; position: absolute; top: 7%; right: 10%;left: 17%; z-index: 3; background: #fff">
+        <div id="main_card" style="width: 100%;height: 85%;">
+            <div id="card-left" style="width: 40%;height: 100%;float: left;">
+
+                <div id="overview" style="margin: 10px;">
+                    <h2>Overview</h2>
+                    <div id="left-left" style="width:50%;float: left;">
+                         <h4>主机名:</h4>
+                         <h4>设备家族:</h4>
+                         <h4>软件类型:</h4>
+                         <h4>软件版本:</h4>
+                         <h4>内存:</h4>
+                         <h4>上次更新时间:</h4>
+                         <h4>id:</h4>
+                    </div>
+                    <div id="left-right" style="width: 50%;float: left">
+                        <h4 id="hostname">N9KV</h4>
+                        <h4 id="family">N9KV</h4>
+                        <h4 id="softwareType">N9KV</h4>
+                        <h4 id="softwareVersion">N9KV</h4>
+                        <h4 id="memorySize">N9KV</h4>
+                        <h4 id="lastUpdated">N9KV</h4>
+                        <h4 id="uuid"></h4>
+                    </div>
+                </div>
+
+            </div>
+            <div id="card-right" style="width: 60%;height: 100%;float: left;">
+                <div>
+                    <table id="interfaceTable" class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>interface</th>
+                                <th>mac address</th>
+                                <th>mode</th>
+                                <th>status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>interface f0/1</td>
+                                <td>50:61:8f:7a:42:3b:9c:21</td>
+                                <td>routed</td>
+                                <td>up</td>
+                            </tr>
+
+                            <tr>
+                                <td>2</td>
+                                <td>interface f0/2</td>
+                                <td>50:61:8f:7a:42:3b:9c:e1</td>
+                                <td>wireless management</td>
+                                <td>down</td>
+                            </tr>
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <button id="btn_close" type="button" class="btn btn-primary btn-lg" style="margin-left: 47.5%;margin-right: auto;margin-top: 20px;width: 80px;height: auto">关闭</button>
+    </div>
+
+
 </div>
+
 
 
 <!--侧边栏-->
@@ -298,5 +504,10 @@
         }
     })
 
+    // 关闭弹窗
+    $('#btn_close').click(function () {
+         $('#showdiv').hide();  //隐藏弹窗
+         $('#cover').css('display','none');
+    })
 
 </script>

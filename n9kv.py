@@ -9,6 +9,7 @@ app = Flask(__name__)
 CORS(app, resources=r'/*')
 
 
+
 @app.after_request
 def cors(environ):
     environ.headers['Access-Control-Allow-Origin']='*'
@@ -74,7 +75,7 @@ def show():
 def get_m0():
     switchuser = 'admin'
     switchpassword = 'eve'
-    url = 'http://180.201.158.167:8080/ins'
+    url = 'http://180.201.131.215/ins'
     myheaders = {'content-type': 'application/json-rpc'}
     payload = [
         {
@@ -155,7 +156,7 @@ def showPacketType(number):
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
                CommunityData('campus', mpModel=1),
-               UdpTransportTarget(('180.201.158.167', number)),
+               UdpTransportTarget(('180.201.131.215', number)),
                ContextData(),
                ObjectType(ObjectIdentity('.1.3.6.1.2.1.4.3.0')),  # ipin
                ObjectType(ObjectIdentity('.1.3.6.1.2.1.4.10.0')),  # ipout
@@ -216,7 +217,7 @@ def send_command(cmd):
     print("exe "+cmd+" ...")
     switchuser = 'admin'
     switchpassword = 'eve'
-    url = 'http://180.201.158.167:8080/ins'
+    url = 'http://180.201.131.215:8080/ins'
     myheaders = {'content-type': 'application/json-rpc'}
     payload = [
         {
@@ -236,7 +237,7 @@ def send_command_complex(cmd1, cmd2):
     print("exe "+cmd1+" ....and "+cmd2+" ....")
     switchuser = 'admin'
     switchpassword = 'eve'
-    url = 'http://180.201.158.167:8080/ins'
+    url = 'http://180.201.131.215:8080/ins'
     myheaders = {'content-type': 'application/json-rpc'}
     payload = [
         {
@@ -267,7 +268,7 @@ def getDeviceInfo():
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
                CommunityData('campus', mpModel=1),
-               UdpTransportTarget(('180.201.158.167', 8090)),
+               UdpTransportTarget(('180.201.131.215', 8090)),
                ContextData(),
                ObjectType(ObjectIdentity('.1.3.6.1.2.1.1.5.0')),
                )
@@ -281,7 +282,7 @@ def getDeviceInfo():
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
                CommunityData('campus', mpModel=1),
-               UdpTransportTarget(('180.201.158.167', 8092)),
+               UdpTransportTarget(('180.201.131.215', 8092)),
                ContextData(),
                ObjectType(ObjectIdentity('.1.3.6.1.2.1.1.5.0')),
                )
@@ -308,7 +309,7 @@ def getPacketException(ExceptionList):
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
                CommunityData('campus', mpModel=1),
-               UdpTransportTarget(('180.201.158.167', 8090)),
+               UdpTransportTarget(('180.201.131.215', 8090)),
                ContextData(),
                ObjectType(ObjectIdentity('.1.3.6.1.2.1.4.3.0')),
                ObjectType(ObjectIdentity('.1.3.6.1.2.1.4.8.0')),
@@ -351,7 +352,7 @@ def getPortException(ExceptionList):
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
                CommunityData('campus', mpModel=1),
-               UdpTransportTarget(('180.201.158.167', 8090)),
+               UdpTransportTarget(('180.201.131.215', 8090)),
                ContextData(),
                ObjectType(ObjectIdentity('.1.3.6.1.2.1.1.5.0')),
                )
@@ -366,7 +367,7 @@ def getPortException(ExceptionList):
             errorIndication, errorStatus, errorIndex, varBinds = next(
                 getCmd(SnmpEngine(),
                        CommunityData('campus', mpModel=1),
-                       UdpTransportTarget(('180.201.158.167', 8090)),
+                       UdpTransportTarget(('180.201.131.215', 8090)),
                        ContextData(),
                        ObjectType(ObjectIdentity('.1.3.6.1.2.1.1.5.0')),
                        ObjectType(ObjectIdentity('IF-MIB', 'ifDescr', i)),
@@ -385,7 +386,7 @@ def getPortException(ExceptionList):
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
                CommunityData('campus', mpModel=1),
-               UdpTransportTarget(('180.201.158.167', 8092)),
+               UdpTransportTarget(('180.201.131.215', 8092)),
                ContextData(),
                ObjectType(ObjectIdentity('.1.3.6.1.2.1.1.5.0')),
                )
@@ -399,7 +400,7 @@ def getPortException(ExceptionList):
             errorIndication, errorStatus, errorIndex, varBinds = next(
                 getCmd(SnmpEngine(),
                        CommunityData('campus', mpModel=1),
-                       UdpTransportTarget(('180.201.158.167', 8092)),
+                       UdpTransportTarget(('180.201.131.215', 8092)),
                        ContextData(),
                        ObjectType(ObjectIdentity('.1.3.6.1.2.1.1.5.0')),
                        ObjectType(ObjectIdentity('IF-MIB', 'ifDescr', i)),
