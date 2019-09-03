@@ -190,8 +190,13 @@
         }
     })
 
+    // pieData[index]  0设备 1链路 2流量 3接口
+    var pieData = [{value:0,name:'设备异常'},
+                {value:0,name:'链路异常'},
+                {value:0,name:'流量超限'},
+                {value:0,name:'接口异常'}];
     var pieChart = echarts.init(document.getElementById('pie-chart'));
-    var option = {
+    var pieOption = {
         title:{
             text:"异常种类"
         },
@@ -199,15 +204,11 @@
             name:'访问来源',
             type:'pie',
             roseType:'angle',
-            data:[
-                {value:3,name:'设备异常'},
-                {value:5,name:'链路异常'},
-                {value:9,name:'流量超限'},
-                {value:7,name:'接口异常'},
-            ]
+            data:pieData
         }]
     };
-    pieChart.setOption(option);
+    pieChart.setOption(pieOption);
+
 
     var data=[0,0,0,0];
     var barChart = echarts.init(document.getElementById('bar-chart'));
@@ -292,6 +293,9 @@
                             $("#warning_num").html(warning_num);
                             insertRow(get_current_id(),get_current_time(),"流量超限",2,"主干链路流量过大","alert-warning");
                             maxValue=maxValue*2;
+
+                            pieData[2]['value']++;
+                            pieChart.setOption(pieOption);
                         }
                     }
                     last_in = ru;
@@ -329,6 +333,8 @@
                             $("#error_num").html(error_num);
                             insertRow(get_current_id(),get_current_time(),"接口异常",4,execptDes,"alert-danger");
                             tempcnt=1;   //只显示一次
+                            pieData[3]['value']++;
+                            pieChart.setOption(pieOption);
                         }
                         if(exceptType=="deviceExc"&&tempcnt2==0){
                             error_num++;
@@ -337,6 +343,8 @@
                             $("#error_num").html(error_num);
                             insertRow(get_current_id(),get_current_time(),"设备异常",5,execptDes,"alert-danger");
                             tempcnt2=1;   //只显示一次
+                            pieData[0]['value']++;
+                            pieChart.setOption(pieOption);
                         }
                     }
                 }else{
@@ -346,6 +354,14 @@
                             tableObj.deleteRow(i);
                             error_num--;
                             $("#error_num").html(error_num);
+
+                            if(tableObj.rows[i].cells[3].innerText==4){
+                                pieData[3]['value']--;
+                            }
+                            else if(tableObj.rows[i].cells[3].innerText==5){
+                                pieData[0]['value']--;
+                            }
+                            pieChart.setOption(pieOption);
                         }
                     }
                 }
@@ -402,4 +418,8 @@
             }
         })
     },3000)
+
+
+
+
 </script>
